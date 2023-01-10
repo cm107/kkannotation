@@ -306,7 +306,7 @@ class CocoManager:
             "annotations_id", "annotations_category_id", "annotations_image_id", "annotations_iscrowd",
             "annotations_num_keypoints", "licenses_id", "categories_id"
         ]:
-            self.df_json[x] = self.df_json[x].astype(int)
+            self.df_json[x] = self.df_json[x].fillna(0).astype(int)
         # classes for drawing
         self._classes = self.df_json["categories_name"].unique()
 
