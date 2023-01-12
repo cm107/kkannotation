@@ -2,7 +2,7 @@ import json, os, shutil, datetime
 import pandas as pd
 import numpy as np
 import cv2
-from typing import List, Union
+from typing import List, Union, Callable
 from tqdm import tqdm
 
 # local package
@@ -498,6 +498,7 @@ class CocoManager:
     
     def draw_annotations(
         self, src: Union[int, str], imgpath: str=None, is_draw_name: bool=False, is_show: bool=True, save_path: str=None, resize: int=None,
+        preproc: Callable[[np.ndarray], np.ndarray]=None
     ) -> np.ndarray:
         assert check_type(src, [int, str])
         assert save_path is None or isinstance(save_path, str)
@@ -509,6 +510,8 @@ class CocoManager:
         img     = cv2.imread(imgpath)
         if img is None:
             logger.raise_error(f"img file: {imgpath} is not exist.")
+        if preproc is not None:
+            img = preproc(img)
         for i in np.arange(df.shape[0]):
             se  = df.iloc[i]
             if hasattr(self, "_classes"):
